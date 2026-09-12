@@ -23,19 +23,20 @@ The trademark was chosen as a light bulb with a resemblance to a leaf. The light
 1. Do the previous instructions, steps 1 to 6
 
 For ANDROID phones:
-2. Enable Developer Options: On your phone, go to Settings > About Phone. Tap Build Number 7 times until you see a "You are now a developer!" notification.
-3. Go back to your main Settings menu, find Developer Options, and toggle on USB Debugging.
-4. Plug your phone into your computer via a USB cable. If prompted on your phone, change the USB preference from "Charging only" to File Transfer / MTP.
+1. Enable Developer Options: On your phone, go to Settings > About Phone. Tap Build Number 7 times until you see a "You are now a developer!" notification.
+2. Go back to your main Settings menu, find Developer Options, and toggle on USB Debugging.
+3. Plug your phone into your computer via a USB cable.
+4. If prompted on your phone, change the USB preference from "Charging only" to File Transfer / MTP.
 5. Run the code in Android Studio
 
 For IPHONES (requires Mac):
-2. Connect your iPhone to your Mac using a cable
-3. Turn on Developer Mode: Go to Settings > Privacy & Security > scroll to the bottom and tap Developer Mode. Toggle it on and restart your phone.
-4. In Android Studio, right-click your project's ios folder in the left sidebar.
-5. Select Flutter > Open iOS module in Xcode.
-6. In Xcode, click on the root Runner project in the left sidebar
-7. Go to the Signing & Capabilities tab at the top
-8. Under Team, select your Apple ID (if you don’t see it, click Add an Account and log in with your personal Apple ID—a free account works perfectly)
-9. Under Bundle Identifier, if you see an error, change the text slightly (e.g., change com.example.myapp to com.yourname.myapp) to make it unique.
-10. Return to Android Studio. Go to Device Manager and select your physical iPhone from the list.
-11. Run the code
+1. Connect your iPhone to your Mac using a cable
+2. Turn on Developer Mode: Go to Settings > Privacy & Security > scroll to the bottom and tap Developer Mode. Toggle it on and restart your phone.
+3. In Android Studio, right-click your project's ios folder in the left sidebar.
+4. Select Flutter > Open iOS module in Xcode.
+5. In Xcode, click on the root Runner project in the left sidebar
+6. Go to the Signing & Capabilities tab at the top
+7. Under Team, select your Apple ID (if you don’t see it, click Add an Account and log in with your personal Apple ID—a free account works perfectly)
+8. Under Bundle Identifier, if you see an error, change the text slightly (e.g., change com.example.myapp to com.yourname.myapp) to make it unique.
+9. Return to Android Studio. Go to Device Manager and select your physical iPhone from the list.
+10. Run the code
