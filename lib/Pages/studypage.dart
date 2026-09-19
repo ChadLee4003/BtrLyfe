@@ -21,6 +21,9 @@ class _StudyPageState extends State<StudyPage> {
   DateTime? _selectedDay;
 
   final TextEditingController _eventController = TextEditingController();
+  final TextEditingController _minutesController = TextEditingController();
+
+  String _category = 'Study';
 
   @override
   void initState() {
@@ -76,47 +79,104 @@ class _StudyPageState extends State<StudyPage> {
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           _eventController.clear();
+          _minutesController.clear();
+          _category = 'Study';
 
           showDialog(
             context: context,
             builder: (context) {
-              return AlertDialog(
-                scrollable: true,
+              return StatefulBuilder(
+                builder: (context, setDialogState) {
+                  return AlertDialog(
+                    scrollable: true,
+                    title: const Text("Add Event"),
 
-                title: const Text("Event Name"),
+                    content: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        TextField(
+                          controller: _eventController,
+                          decoration: const InputDecoration(
+                            labelText: "Event Name",
+                            hintText: "Enter event name",
+                          ),
+                        ),
 
-                content: Padding(
-                  padding: const EdgeInsets.all(8),
-                  child: TextField(
-                    controller: _eventController,
-                    decoration: const InputDecoration(
-                      hintText: "Enter event name",
+                        const SizedBox(height: 15),
+
+                        TextField(
+                          controller: _minutesController,
+                          keyboardType: TextInputType.number,
+                          decoration: const InputDecoration(
+                            labelText: "Time to Spend",
+                            hintText: "Enter time in minutes",
+                            suffixText: "min",
+                          ),
+                        ),
+
+                        const SizedBox(height: 15),
+
+                        DropdownButtonFormField<String>(
+                          value: _category,
+                          decoration: const InputDecoration(
+                            labelText: "Category",
+                          ),
+                          items: const [
+                            DropdownMenuItem(
+                              value: 'Study',
+                              child: Text('Study'),
+                            ),
+                            DropdownMenuItem(
+                              value: 'Sports',
+                              child: Text('Sports'),
+                            ),
+                            DropdownMenuItem(
+                              value: 'Meetings',
+                              child: Text('Meetings'),
+                            ),
+                            DropdownMenuItem(
+                              value: 'Other',
+                              child: Text('Other'),
+                            ),
+                          ],
+                          onChanged: (value) {
+                            if (value != null) {
+                              setDialogState(() {
+                                _category = value;
+                              });
+                            }
+                          },
+                        ),
+                      ],
                     ),
-                  ),
-                ),
 
-                actions: [
-                  ElevatedButton(
-                    onPressed: () {
-                      final eventName = _eventController.text.trim();
+                    actions: [
+                      ElevatedButton(
+                        onPressed: () {
+                          final eventName = _eventController.text.trim();
+                          final minutes =
+                              int.tryParse(_minutesController.text.trim());
 
-                      if (eventName.isEmpty) {
-                        return;
-                      }
+                          if (eventName.isEmpty || minutes == null || minutes <= 0) {
+                            return;
+                          }
 
-                      final date = _dateOnly(_selectedDay!);
+                          final date = _dateOnly(_selectedDay!);
 
-                      context.read<Items>().addEvent(
-                        date,
-                        eventName,
-                      );
+                          context.read<Items>().addEvent(
+                            date,
+                            eventName,
+                            minutes,
+                            _category,
+                          );
 
-                      Navigator.of(context).pop();
-                    },
-
-                    child: const Text("Submit"),
-                  ),
-                ],
+                          Navigator.of(context).pop();
+                        },
+                        child: const Text("Submit"),
+                      ),
+                    ],
+                  );
+                },
               );
             },
           );
@@ -143,7 +203,7 @@ class _StudyPageState extends State<StudyPage> {
         children: [
           // TITLE
           Text(
-            "Sleep",
+            "Study",
             style: mainFont(
               const TextStyle(
                 color: Colors.white,
@@ -221,6 +281,8 @@ class _StudyPageState extends State<StudyPage> {
             ),
           ),
 
+          const SizedBox(height: 10,),
+
 
           //Items Display_________________________________________________________________________________________________________________________________________________________
 
@@ -247,42 +309,59 @@ class _StudyPageState extends State<StudyPage> {
                   itemCount: events.length,
 
                   itemBuilder: (context, index) {
+                    final event = events[index];
+
                     return Container(
-                      margin: const EdgeInsets.symmetric(
-                        horizontal: 12,
-                        vertical: 4,
+                      margin: const EdgeInsets.only(bottom: 10),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 12,
                       ),
-
                       decoration: BoxDecoration(
-                        color: const Color(0xFFFFFFFF),
+                        color: event.category == 'Study'
+                          ? Colors.yellow
+                          : event.category == 'Sports'
+                              ? Colors.green
+                              : event.category == 'Meetings'
+                                  ? Colors.orange
+                                  : Colors.white,
                         borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: Text(
+                              event.title,
+                              style: const TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.black,
+                              ),
+                            ),
+                          ),
 
-                        boxShadow: const [
-                          BoxShadow(
-                            color: Color(0x33000000),
-                            blurRadius: 5,
-                            offset: Offset(0, 2),
+                          Text(
+                            "${event.minutes} min",
+                            style: const TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black,
+                            ),
+                          ),
+
+                          IconButton(
+                            icon: const Icon(
+                              Icons.delete,
+                              color: Colors.black,
+                            ),
+                            onPressed: () {
+                              context.read<Items>().deleteEvent(
+                                _selectedDay!,
+                                index,
+                              );
+                            },
                           ),
                         ],
-                      ),
-
-                      child: ListTile(
-                        title: Text(
-                          '${events[index]}',
-                        ),
-
-                        trailing: IconButton(
-                          icon: const Icon(
-                            Icons.delete,
-                          ),
-
-                          onPressed: () {
-                            calendar.deleteEvent(
-                              _selectedDay!,
-                              index,
-                            );
-                          },
-                        ),
                       ),
                     );
                   },

@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:btrlyfe/appstate.dart';
+import 'package:btrlyfe/sleepamount.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:webview_flutter/webview_flutter.dart';
@@ -134,6 +135,7 @@ class _SleepPageState extends State<SleepPage> {
 
   @override
   Widget build(BuildContext context) {
+    final sleepProvider = context.watch<SleepProvider>();
     final colors = context.watch<AppColors>();
     Color primarycolor = colors.primaryColor;
     Color secondarycolor = colors.secondaryColor;
@@ -168,6 +170,97 @@ class _SleepPageState extends State<SleepPage> {
                       fontSize: 55,
                     ),
                   ),
+                ),
+
+                const SizedBox(height: 30),
+
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 10),
+                        child: AspectRatio(
+                          aspectRatio: 1,
+                          child: ElevatedButton(
+                            onPressed: sleepProvider.isSleeping
+                                ? null
+                                : () {
+                                    context.read<SleepProvider>().startSleep();
+                                  },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.white,
+                              foregroundColor: secondarycolor,
+                              shape: const CircleBorder(),
+                              elevation: 3,
+                              padding: EdgeInsets.zero,
+                            ),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Icon(
+                                  Icons.bed,
+                                  color: secondarycolor,
+                                  size: 42,
+                                ),
+                                const SizedBox(height: 8),
+                                Text(
+                                  'Sleep',
+                                  style: TextStyle(
+                                    color: secondarycolor,
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 10),
+                        child: AspectRatio(
+                          aspectRatio: 1,
+                          child: ElevatedButton(
+                            onPressed: sleepProvider.isSleeping
+                                ? () {
+                                    context.read<SleepProvider>().wakeUp();
+                                  }
+                                : null,
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.white,
+                              foregroundColor: secondarycolor,
+                              shape: const CircleBorder(),
+                              elevation: 3,
+                              padding: EdgeInsets.zero,
+                            ),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Icon(
+                                  Icons.wb_sunny,
+                                  color: secondarycolor,
+                                  size: 42,
+                                ),
+                                const SizedBox(height: 8),
+                                Text(
+                                  'Wake up',
+                                  style: TextStyle(
+                                    color: secondarycolor,
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
 
                 const SizedBox(height: 30),
@@ -385,6 +478,19 @@ class _SleepPageState extends State<SleepPage> {
 
                   child: WebViewWidget(
                     controller: controller,
+                  ),
+                ),
+
+                const SizedBox(height: 20),
+
+                const Text(
+                  "Data from Caffeine Informer, https://www.caffeineinformer.com/the-caffeine-database",
+
+                  textAlign: TextAlign.center,
+
+                  style: TextStyle(
+                    color: Colors.white70,
+                    fontSize: 15,
                   ),
                 ),
 

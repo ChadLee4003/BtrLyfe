@@ -17,17 +17,46 @@ class Screen extends StatefulWidget {
 class _ScreenState extends State<Screen> {
   int selectedIndex = 0;
 
-  // The screens for each navigation button
+  late PageController _pageController;
+
   final List<Widget> pages = [
     const HomePage(),
     const SleepPage(),
     const StressPage(),
     const StudyPage(),
     const SettingsPage(),
-
   ];
 
+  @override
+  void initState() {
+    super.initState();
+
+    _pageController = PageController(
+      initialPage: selectedIndex,
+    );
+  }
+
+  @override
+  void dispose() {
+    _pageController.dispose();
+    super.dispose();
+  }
+
+  // Called when the user taps a BottomNavigationBar item
   void onItemTapped(int index) {
+    setState(() {
+      selectedIndex = index;
+    });
+
+    _pageController.animateToPage(
+      index,
+      duration: const Duration(milliseconds: 300),
+      curve: Curves.easeInOut,
+    );
+  }
+
+  // Called when the user swipes between pages
+  void onPageChanged(int index) {
     setState(() {
       selectedIndex = index;
     });
@@ -36,15 +65,29 @@ class _ScreenState extends State<Screen> {
   @override
   Widget build(BuildContext context) {
     final colors = context.watch<AppColors>();
+
     Color primarycolor = colors.primaryColor;
     Color secondarycolor = colors.secondaryColor;
     Color tertiarycolor = colors.tertiaryColor;
+
     return Scaffold(
-      body: pages[selectedIndex],
       appBar: AppBar(
         backgroundColor: tertiarycolor,
-        title: const Text("BtrLyfe",style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold),),
+        title: const Text(
+          "BtrLyfe",
+          style: TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
       ),
+
+      body: PageView(
+        controller: _pageController,
+        onPageChanged: onPageChanged,
+        children: pages,
+      ),
+
       bottomNavigationBar: BottomNavigationBar(
         backgroundColor: tertiarycolor,
         selectedItemColor: secondarycolor,
@@ -52,6 +95,7 @@ class _ScreenState extends State<Screen> {
         currentIndex: selectedIndex,
         onTap: onItemTapped,
         type: BottomNavigationBarType.fixed,
+
         items: const [
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
@@ -70,8 +114,8 @@ class _ScreenState extends State<Screen> {
             label: "Study",
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.settings),
-            label: "Settings",
+            icon: Icon(Icons.bar_chart),
+            label: "Status",
           ),
         ],
       ),

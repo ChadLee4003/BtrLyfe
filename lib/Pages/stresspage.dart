@@ -1,3 +1,4 @@
+import 'package:btrlyfe/dailyvalue.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'dart:async';
@@ -23,33 +24,33 @@ class _StressPageState extends State<StressPage> {
   String journalText = '';
 
   final List<String> moods = [
-    '😄',
-    '🙂',
-    '😐',
-    '😟',
     '😣',
+    '😟',
+    '😐',
+    '🙂',
+    '😄',
   ];
 
   final List<String> moodNames = [
-    'Great',
-    'Good',
-    'Okay',
-    'Stressed',
     'Very Stressed',
+    'Stressed',
+    'Okay',
+    'Good',
+    'Great',
   ];
 
   String getRecommendation() {
     switch (selectedMood) {
       case 0:
-        return 'You seem to be doing great! Keep your momentum going and remember to take regular breaks.';
+        return 'You seem very stressed. Step away from your work for a moment and consider talking to someone you trust.';
       case 1:
-        return 'You seem to be doing well. A short break can help you stay focused throughout the day.';
+        return 'You seem stressed. Try taking a 5-minute break, drinking some water, and doing a calming activity.';
       case 2:
         return 'You seem to be feeling okay. Consider taking a few minutes to relax before continuing your work.';
       case 3:
-        return 'You seem stressed. Try taking a 5-minute break, drinking some water, and doing a calming activity.';
+        return 'You seem to be doing well. A short break can help you stay focused throughout the day.';
       case 4:
-        return 'You seem very stressed. Step away from your work for a moment and consider talking to someone you trust.';
+        return 'You seem to be doing great! Keep your momentum going and remember to take regular breaks.';
       default:
         return 'Check in with your mood to receive a personalized recommendation.';
     }
@@ -70,6 +71,8 @@ class _StressPageState extends State<StressPage> {
         content: Text('Check-in saved 🌱'),
       ),
     );
+    
+    context.read<DailyValueProvider>().submitValue(selectedMood);
   }
 
   @override
@@ -91,13 +94,21 @@ class _StressPageState extends State<StressPage> {
       ),
       child: SafeArea(
         child: SingleChildScrollView(
-          padding: const EdgeInsets.fromLTRB(20, 5, 20, 30),
+          padding: const EdgeInsets.fromLTRB(20, 20, 20, 30),
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Text(
-                'Stress & Well-being',
-                style: mainfont(const TextStyle(color: Colors.white, fontSize: 28)),
+              Align(
+                alignment: Alignment.center,
+                child:Text(
+                  "Stress",
+                  style: mainfont(
+                    const TextStyle(
+                      color: Colors.white,
+                      fontSize: 55,
+                    ),
+                  ),
+                ),
               ),
 
               const SizedBox(height: 6),
@@ -108,6 +119,7 @@ class _StressPageState extends State<StressPage> {
                   fontSize: 15,
                   color: Colors.white,
                 ),
+                textAlign: TextAlign.center,
               ),
 
               const SizedBox(height: 25),
@@ -147,12 +159,12 @@ class _StressPageState extends State<StressPage> {
                         moods.length,
                         (index) {
                           final isSelected =
-                              selectedMood == index;
+                              selectedMood == 4-index;
 
                           return GestureDetector(
                             onTap: () {
                               setState(() {
-                                selectedMood = index;
+                                selectedMood = 4-index;
                               });
                             },
                             child: Column(
@@ -178,7 +190,7 @@ class _StressPageState extends State<StressPage> {
                                     ),
                                   ),
                                   child: Text(
-                                    moods[index],
+                                    moods[4-index],
                                     style: const TextStyle(
                                       fontSize: 29,
                                     ),
@@ -188,7 +200,7 @@ class _StressPageState extends State<StressPage> {
                                 const SizedBox(height: 5),
 
                                 Text(
-                                  moodNames[index],
+                                  moodNames[4-index],
                                   style: TextStyle(
                                     fontSize: 11,
                                     color:Colors.white,
@@ -334,6 +346,7 @@ class _StressPageState extends State<StressPage> {
                   color: Color.fromARGB(255, 255, 255, 255),
                   fontSize: 14,
                 ),
+                textAlign: TextAlign.center,
               ),
 
               const SizedBox(height: 15),
@@ -462,22 +475,11 @@ class _StressPageState extends State<StressPage> {
     IconData icon,
     String title,
   ) {
-    return Row(
-      children: [
-        Icon(
-          icon,
-          size: 23,
-          color: context.watch<AppColors>().secondaryColor,
-        ),
-
-        const SizedBox(width: 8),
-
-        Text(
-          title,
-          style: mainfont(const TextStyle(color: Colors.white, fontSize: 20))
-        ),
-      ],
+    return Text(
+      title,
+      style: const TextStyle(color: Colors.white, fontSize: 20,fontWeight: FontWeight.bold)
     );
+      
   }
 
   // ==========================================================

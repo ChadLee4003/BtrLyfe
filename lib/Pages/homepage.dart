@@ -34,21 +34,23 @@ class _HomePageState extends State<HomePage> {
         ),
       ),
       padding: const EdgeInsets.fromLTRB(20, 5, 20, 30),
-      child: Column(
-        children: [
-          const SizedBox(height: 60),
-          //BtrLyfe______________________________________________________________________________________
-          Align(
-            alignment: Alignment.topCenter,
-            child: Image.asset('assets/BtrLyfeLogo.png')
-          ),
-          const SizedBox(height: 10),
-          Text(
-            textAlign: TextAlign.center,
-            "BtrLyfe aims to help student users live a healthier lifestyle. This is achieved through the three sections displayed in the app: SLEEP, STRESS, and STUDY, all specialized in improving their designated field of wellness. ",
-            style:mainfont(const TextStyle(color: Colors.white, fontSize: 24,))
-          ) 
-        ]
+      child:SingleChildScrollView(
+        child: Column(
+          children: [
+            const SizedBox(height: 40),
+            //BtrLyfe______________________________________________________________________________________
+            Align(
+              alignment: Alignment.topCenter,
+              child: Image.asset('assets/BtrLyfeLogo.png')
+            ),
+            const SizedBox(height: 10),
+            Text(
+              textAlign: TextAlign.center,
+              "BtrLyfe aims to help student users live a healthier lifestyle. This is achieved through the three sections displayed in the app: SLEEP, STRESS, and STUDY, all specialized in improving their designated field of wellness. ",
+              style:mainfont(const TextStyle(color: Colors.white, fontSize: 21,))
+            ) 
+          ]
+        )
       )
     );
   }

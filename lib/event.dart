@@ -1,11 +1,16 @@
-class Event{
- final String title;
- Event(this.title);
+class Event {
+  final String title;
+  final int minutes;
+  final String category;
 
+  Event({
+    required this.title,
+    required this.minutes,
+    required this.category,
+  });
 
- @override
- String toString() {
-   return title;
- }
+  @override
+  String toString() {
+    return title;
+  }
 }
-
